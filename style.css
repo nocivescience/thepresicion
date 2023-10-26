@@ -1,0 +1,8 @@
+#joystick-head{
+    position: relative;
+    background-color: red;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: grab;
+}
