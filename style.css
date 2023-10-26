@@ -124,3 +124,17 @@ html, body{
     margin-left: -5px;
     transform-origin: top center;
 }
+.wall::before, .wall::after{
+    content: '';
+    position: absolute;
+    background-color: rgb(0, 0, 0);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.wall::before{
+    top: -5px;
+}
+.wall::after{
+    bottom: -5px;
+}

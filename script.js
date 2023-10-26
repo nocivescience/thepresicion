@@ -3,7 +3,7 @@ Math.minmax = (value, limit) => {
 }
 const joystickHeadElement = document.querySelector('#joystick-head');   // Joystick head element
 const mazeEl = document.querySelector('#maze');                          // Maze element
-let gameInProgress, mouseStartX, mouseStartY, accelerationX, accelerationY, frictionX, frictionY, walls, balls, previousTimestamp;
+let gameInProgress, mouseStartX, mouseStartY, accelerationX, accelerationY, frictionX, frictionY, balls, walls, previousTimestamp;
 let hardMode = false;
 let ballElements = [];
 let holeElements = [];
@@ -57,6 +57,29 @@ function resetGame() {
         })
     }
 }
+walls=[
+    {column:0, row: 0, horizontal: true, length: 10},
+    {column:0, row: 0, horizontal: false, length: 9},
+    {column:0, row: 9, horizontal: true, length: 10},
+    {column:10, row: 0, horizontal: false, length: 9},
+].map((wall) => ({
+    x : wall.column * (wallW+pathW),
+    y : wall.row * (wallW+pathW),
+    horizontal: wall.horizontal,
+    length: wall.length * (wallW+pathW),
+}))
+walls.forEach(({x,y,horizontal,length}) => {
+    const wall= document.createElement('div');
+    wall.setAttribute('class', 'wall');
+    wall.style.cssText = `
+        left: ${x}px;
+        top: ${y}px;
+        width: ${wallW}px;
+        height: ${length}px;
+        transform: rotate(${horizontal ? -90 : 0}deg);
+    `;
+    mazeEl.appendChild(wall);
+})
 function slow(number, difference){
     if(Math.abs(number) < difference){
         return 0;
