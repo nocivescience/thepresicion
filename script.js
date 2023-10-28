@@ -188,43 +188,13 @@ function main(timestamp) {
     const timeElapsed = (timestamp - previousTimestamp) / 16;
     try {
         if (accelerationX !== undefined && accelerationY !== undefined) {
+            if(accelerationX!==undefined&&accelerationY!==undefined){
+                console.log(accelerationX, accelerationY);
+            }
             const velocityChangeX = accelerationX * timeElapsed;
             const velocityChangeY = accelerationY * timeElapsed;
             const frictionDeltaX = frictionX * timeElapsed;
             const frictionDeltaY = frictionY * timeElapsed;
-            balls.forEach((ball)=>{
-                if(velocityChangeX === 0){
-                    ball.velocityX = slow(ball.velocityX, frictionDeltaX);
-                }else{
-                    ball.velocityX += velocityChangeX;
-                    ball.velocityX = Math.minmax(ball.velocityX, 1.5);
-                    ball.velocityX = ball.velocityX - Math.sign(velocityChangeX) * frictionDeltaX;
-                    ball.velocityX = Math.minmax(ball.velocityX, maxVelocity);
-                }
-                if(velocityChangeY === 0){
-                    ball.velocityY = slow(ball.velocityY, frictionDeltaY);
-                }else{
-                    ball.velocityY += velocityChangeY;
-                    // ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
-                    ball.velocityY = ball.velocityY - Math.sign(velocityChangeY) * frictionDeltaY;
-                    ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
-                };
-                ball.nextX = ball.x + ball.velocityX;
-                ball.nextY = ball.y + ball.velocityY;
-                // ballElements.forEach((ballElement, index) => {
-                //     ballElement.style.cssText = `}
-                //         left: ${ball.x}px;
-                //         top: ${ball.y}px;
-                //     `;
-                // });
-                walls.forEach((wall, wi) => {
-                    if(wall.horizontal){
-                        if(ball.nextY+ballSize/2>=wall.y-wallW/2 && ball.nextY-ballSize/2<=wall.y+wallW/2){
-                            console.log(ball.nextY+ballSize/2>=wall.y-wallW/2 && ball.nextY-ballSize/2<=wall.y+wallW/2);
-                        }
-                    }
-                });
-            });
         }
     } catch (error) {
         console.log(error);
