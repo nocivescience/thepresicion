@@ -7,20 +7,48 @@ let gameInProgress, mouseStartX, mouseStartY, accelerationX, accelerationY, fric
 let hardMode = false;
 let ballElements = [];
 let holeElements = [];
-const pathW= 10;
-const wallW= 18;
+const pathW= 25;
+const wallW= 10;
 const ballSize = 10;
 const holeSize = 18;
 resetGame();
+function distance2D(p1, p2) {
+    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+};
+function getAngle(p1, p2) { //revisa esto
+    let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+    if (angle < 0) angle += 360;  // hasta acá
+    return angle;
+};
+const closestItCanBe = (cap, ball) => {
+    let angle = getAngle(cap, ball);
+    const deltaX= Math.cos(angle) * (wallW+ballSize)/2;
+    const deltaY= Math.sin(angle) * (wallW+ballSize)/2;
+    return {x: cap.x + deltaX, y: cap.y + deltaY};
+};
+const rollAroundCap =(cap, ball)=>{
+    const nextX= 1
+    const nextY= 1
+    return {nextX, nextY}
+}
+function slow(number, difference){
+    if(Math.abs(number) <= difference){
+        return 0;
+    }
+    if(number>difference){
+        return number-difference;
+    }
+    return number+difference;
+}
 function resetGame() {
     gameInProgress = false;
     previousTimestamp = undefined;
     mouseStartX = undefined;
     mouseStartY = undefined;
-    accelerationX = 0;
-    accelerationY = 0;
-    frictionX = 0;
-    frictionY = 0;
+    accelerationX = undefined;
+    accelerationY = undefined;
+    frictionX = undefined;
+    frictionY = undefined;
     joystickHeadElement.style.cssText = `
         left: 0;
         top: 0;
@@ -62,6 +90,75 @@ walls=[
     {column:0, row: 0, horizontal: false, length: 9},
     {column:0, row: 9, horizontal: true, length: 10},
     {column:10, row: 0, horizontal: false, length: 9},
+    {column:0, row: 6, horizontal: true, length: 1},
+    {column:0, row: 8, horizontal: true, length: 1},
+    {column:2, row: 2, horizontal: true, length: 2},
+    {column:2, row: 4, horizontal: true, length: 1},
+    {column:2, row: 5, horizontal: true, length: 1},
+    {column:2, row: 6, horizontal: true, length: 1},
+    { column: 3, row: 3, horizontal: true, length: 1 },
+  { column: 3, row: 8, horizontal: true, length: 3 },
+
+  // Horizontal lines starting in 5th column
+  { column: 4, row: 6, horizontal: true, length: 1 },
+
+  // Horizontal lines starting in 6th column
+  { column: 5, row: 2, horizontal: true, length: 2 },
+  { column: 5, row: 7, horizontal: true, length: 1 },
+
+  // Horizontal lines starting in 7th column
+  { column: 6, row: 1, horizontal: true, length: 1 },
+  { column: 6, row: 6, horizontal: true, length: 2 },
+
+  // Horizontal lines starting in 8th column
+  { column: 7, row: 3, horizontal: true, length: 2 },
+  { column: 7, row: 7, horizontal: true, length: 2 },
+
+  // Horizontal lines starting in 9th column
+  { column: 8, row: 1, horizontal: true, length: 1 },
+  { column: 8, row: 2, horizontal: true, length: 1 },
+  { column: 8, row: 3, horizontal: true, length: 1 },
+  { column: 8, row: 4, horizontal: true, length: 2 },
+  { column: 8, row: 8, horizontal: true, length: 2 },
+
+  // Vertical lines after the 1st column
+  { column: 1, row: 1, horizontal: false, length: 2 },
+  { column: 1, row: 4, horizontal: false, length: 2 },
+
+  // Vertical lines after the 2nd column
+  { column: 2, row: 2, horizontal: false, length: 2 },
+  { column: 2, row: 5, horizontal: false, length: 1 },
+  { column: 2, row: 7, horizontal: false, length: 2 },
+
+  // Vertical lines after the 3rd column
+  { column: 3, row: 0, horizontal: false, length: 1 },
+  { column: 3, row: 4, horizontal: false, length: 1 },
+  { column: 3, row: 6, horizontal: false, length: 2 },
+
+  // Vertical lines after the 4th column
+  { column: 4, row: 1, horizontal: false, length: 2 },
+  { column: 4, row: 6, horizontal: false, length: 1 },
+
+  // Vertical lines after the 5th column
+  { column: 5, row: 0, horizontal: false, length: 2 },
+  { column: 5, row: 6, horizontal: false, length: 1 },
+  { column: 5, row: 8, horizontal: false, length: 1 },
+
+  // Vertical lines after the 6th column
+  { column: 6, row: 4, horizontal: false, length: 1 },
+  { column: 6, row: 6, horizontal: false, length: 1 },
+
+  // Vertical lines after the 7th column
+  { column: 7, row: 1, horizontal: false, length: 4 },
+  { column: 7, row: 7, horizontal: false, length: 2 },
+
+  // Vertical lines after the 8th column
+  { column: 8, row: 2, horizontal: false, length: 1 },
+  { column: 8, row: 4, horizontal: false, length: 2 },
+
+  // Vertical lines after the 9th column
+  { column: 9, row: 1, horizontal: false, length: 1 },
+  { column: 9, row: 5, horizontal: false, length: 2 }
 ].map((wall) => ({
     x : wall.column * (wallW+pathW),
     y : wall.row * (wallW+pathW),
@@ -80,15 +177,6 @@ walls.forEach(({x,y,horizontal,length}) => {
     `;
     mazeEl.appendChild(wall);
 })
-function slow(number, difference){
-    if(Math.abs(number) < difference){
-        return 0;
-    }
-    if(number>difference){
-        return number-difference;
-    }
-    return number+difference;
-}
 function main(timestamp) {
     if (!gameInProgress) return;
     if (previousTimestamp === undefined) {
@@ -109,7 +197,7 @@ function main(timestamp) {
                     ball.velocityX = slow(ball.velocityX, frictionDeltaX);
                 }else{
                     ball.velocityX += velocityChangeX;
-                    ball.velocityX = Math.minmax(ball.velocityX, maxVelocity);
+                    ball.velocityX = Math.minmax(ball.velocityX, 1.5);
                     ball.velocityX = ball.velocityX - Math.sign(velocityChangeX) * frictionDeltaX;
                     ball.velocityX = Math.minmax(ball.velocityX, maxVelocity);
                 }
@@ -120,7 +208,22 @@ function main(timestamp) {
                     // ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
                     ball.velocityY = ball.velocityY - Math.sign(velocityChangeY) * frictionDeltaY;
                     ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
-                }
+                };
+                ball.nextX = ball.x + ball.velocityX;
+                ball.nextY = ball.y + ball.velocityY;
+                // ballElements.forEach((ballElement, index) => {
+                //     ballElement.style.cssText = `}
+                //         left: ${ball.x}px;
+                //         top: ${ball.y}px;
+                //     `;
+                // });
+                walls.forEach((wall, wi) => {
+                    if(wall.horizontal){
+                        if(ball.nextY+ballSize/2>=wall.y-wallW/2 && ball.nextY-ballSize/2<=wall.y+wallW/2){
+                            console.log(ball.nextY+ballSize/2>=wall.y-wallW/2 && ball.nextY-ballSize/2<=wall.y+wallW/2);
+                        }
+                    }
+                });
             });
         }
     } catch (error) {
@@ -140,7 +243,7 @@ joystickHeadElement.addEventListener('mousedown', (e) => {
         `;
     }
 });
-joystickHeadElement.addEventListener('mousemove', (e) => {
+window.addEventListener('mousemove', (e) => {
     if (gameInProgress) {
         const mouseDeltaX = -Math.minmax(mouseStartX - e.clientX, 15);
         const mouseDeltaY = -Math.minmax(mouseStartY - e.clientY, 15);
@@ -185,17 +288,17 @@ window.addEventListener('keydown', (e) => {
         return;
     }
 });
-window.addEventListener('mouseup', () => {
-    joystickHeadElement.style.cssText = `
-        left: 0;
-        top: 0;
-        animation: glow;
-        cursor: grab;
-    `;
-});
-joystickHeadElement.addEventListener('mouseup', () => {
-    if (gameInProgress) {
-        gameInProgress = false;
-        console.log('Game stopped');
-    }
-});
+// window.addEventListener('mouseup', () => {
+//     joystickHeadElement.style.cssText = `
+//         left: 0;
+//         top: 0;
+//         animation: glow;
+//         cursor: grab;
+//     `;
+// });
+// joystickHeadElement.addEventListener('mouseup', () => {
+//     if (gameInProgress) {
+//         gameInProgress = false;
+//         console.log('Game stopped');
+//     }
+// });

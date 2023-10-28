@@ -445,6 +445,8 @@ function main(timestamp) {
               ball.nextY + ballSize / 2 >= wall.y - wallW / 2 &&
               ball.nextY - ballSize / 2 <= wall.y + wallW / 2
             ) {
+              console.log(ball.nextY + ballSize / 2 >= wall.y - wallW / 2 &&
+              ball.nextY - ballSize / 2 <= wall.y + wallW / 2);
               // Ball got within the strip of the wall
               // (not necessarily hit it, could be before or after)
 
