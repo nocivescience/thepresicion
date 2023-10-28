@@ -249,7 +249,7 @@ joystickHeadElement.addEventListener("mousedown", function (event) {
     mouseStartX = event.clientX;
     mouseStartY = event.clientY;
     gameInProgress = true;
-    window.requestAnimationFrame(main); //super
+    window.requestAnimationFrame(main);
     noteElement.style.opacity = 0;
     joystickHeadElement.style.cssText = `
         animation: none;

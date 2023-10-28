@@ -3,6 +3,7 @@ Math.minmax = (value, limit) => {
 }
 const joystickHeadElement = document.querySelector('#joystick-head');   // Joystick head element
 const mazeEl = document.querySelector('#maze');                          // Maze element
+const noteElement = document.querySelector('#note');                     // Note element
 let gameInProgress, mouseStartX, mouseStartY, accelerationX, accelerationY, frictionX, frictionY, balls, walls, previousTimestamp;
 let hardMode = false;
 let ballElements = [];
@@ -188,85 +189,47 @@ function main(timestamp) {
     const maxVelocity = 1.5;
     const timeElapsed = (timestamp - previousTimestamp) / 16;
     try {
-        if (accelerationX !== undefined && accelerationY !== undefined) {
+          if(accelerationX !== undefined && accelerationY !== undefined){
             const velocityChangeX = accelerationX * timeElapsed;
             const velocityChangeY = accelerationY * timeElapsed;
             const frictionDeltaX = frictionX * timeElapsed;
             const frictionDeltaY = frictionY * timeElapsed;
-            balls.forEach((ball)=>{
-                if(velocityChangeX === 0){
-                    ball.velocityX = slow(ball.velocityX, frictionDeltaX);
-                }else{
-                    ball.velocityX += velocityChangeX;
-                    ball.velocityX = Math.minmax(ball.velocityX, 1.5);
-                    ball.velocityX = ball.velocityX - Math.sign(velocityChangeX) * frictionDeltaX;
-                    ball.velocityX = Math.minmax(ball.velocityX, maxVelocity);
-                }
-                if(velocityChangeY === 0){
-                    ball.velocityY = slow(ball.velocityY, frictionDeltaY);
-                }else{
-                    ball.velocityY += velocityChangeY;
-                    // ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
-                    ball.velocityY = ball.velocityY - Math.sign(velocityChangeY) * frictionDeltaY;
-                    ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
-                };
+            balls.forEach((ball, index) => {
+                ball.velocityX =slow(ball.velocityX, frictionDeltaX);
+                ball.velocityY =slow(ball.velocityY, frictionDeltaY);
+                ball.velocityY =.01;
                 ball.nextX = ball.x + ball.velocityX;
                 ball.nextY = ball.y + ball.velocityY;
-                // ballElements.forEach((ballElement, index) => {
-                //     ballElement.style.cssText = `}
-                //         left: ${ball.x}px;
-                //         top: ${ball.y}px;
-                //     `;
-                // });
                 walls.forEach((wall, wi) => {
-                    if(wall.horizontal){
-                        if(ball.nextY+ballSize/2>=wall.y-wallW/2 && ball.nextY-ballSize/2<=wall.y+wallW/2){
-                            console.log(ball.nextY+ballSize/2>=wall.y-wallW/2 && ball.nextY-ballSize/2<=wall.y+wallW/2);
-                            const wallStart ={
-                                x: wall.x,
-                                y: wall.y,
-                            };
-                            const wallEnd ={
-                                x: wall.x+wall.length,
-                                y: wall.y,
-                            };
-                            if(ball.nextX+size/2>=wallStart.x-wallW/2 && ball.nextX<wallStart.x){
-                                const distance = distance2D(wallStart,{
-                                    x: ball.nextX,
-                                    y: ball.nextY,
-                                });
-                                if(distance<ballSize/2+wallW/2){
-                                    console.warn('collision');
-                                    const closest= closestItCanBe(wallStart, {
-                                        x: ball.nextX,
-                                        y: ball.nextY,
-                                    });
-                                    const rolled= rollAroundCap(wallStart, {
-                                        x: closest.x,
-                                        y: closest.y,
-                                        velocityX: ball.velocityX,
-                                        velocityY: ball.velocityY,
-                                    });
-                                    Object.assign(ball, rolled);
-                                }
-                            }
-                            if(
-                                ball.nextX-ballSize/2<=wallEnd.x+wallW/2 &&
-                                ball.nextX>wallEnd.x
-                            ){
-                                const distance = distance2D(wallEnd,{
-                                    x: ball.nextX,
-                                    y: ball.nextY,
-                                });
-                                if(distance<ballSize/2+wallW/2){
-                                    console.warn('collision');
-                                }
-                            }
-                        }
-                    }
-                });
+                    const wallStart = {x: wall.x, y: wall.y};
+                    const wallEnd = {x: wall.x, y: wall.y};
+                    const distance = distance2D(wallEnd,{
+                        x: ball.x,
+                        y: ball.y
+                    });
+                    ball.x += ball.velocityX;
+                    ball.y += ball.velocityY;
+                    console.log(ball.x, ball.y);
+                }); //aca va el choque con las paredes
+                balls.forEach(({x,y},index)=>{
+                    ballElements[index].style.cssText = `
+                        left: ${x}px;
+                        top: ${y}px;
+                    `;
+                })
             });
-        }
+          };
+          if(balls.every((ball)=>{
+            distance2D(ball,{x:350/2, y:315/2})<65/2
+          })){
+            resetGame();
+            noteElement.innerHTML = `Felicidades, ganaeste en modo ${hardMode ? 'dificil' : 'facil'}`;
+            noteElement.style.opacity=1;
+            gameInProgress = false;
+          }else{
+            previousTimestamp = timestamp;
+            window.requestAnimationFrame(main);
+          }
     } catch (error) {
         console.log(error);
     }

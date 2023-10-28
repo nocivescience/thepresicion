@@ -138,3 +138,11 @@ html, body{
 .wall::after{
     bottom: -5px;
 }
+#note{
+    grid-row: 3;
+    grid-column: 2;
+    text-align: center;
+    font-size: 0.8em;
+    color: rgb(0, 0, 0);
+    transition: opacity 2s;
+}
