@@ -215,7 +215,7 @@ function main(timestamp) {
                 ball.nextY = ball.y + ball.velocityY;
                 walls.forEach((wall) => {
                     if (wall.horizontal) {
-                        if (!ball.nextY + ballSize / 2 >= wall.y - wallW / 2 && !ball.nextY - ballSize / 2 <= wall.y + wallW / 2) { //corrije esto
+                        if (ball.nextY + ballSize / 2 >= wall.y - wallW / 2 && ball.nextY - ballSize / 2 <= wall.y + wallW / 2) { //listo
                             const wallStart = {
                                 x: wall.x,
                                 y: wall.y,
@@ -224,12 +224,12 @@ function main(timestamp) {
                                 x: wall.x + wall.length,
                                 y: wall.y,
                             };
-                            if (!(ball.nextX + ballSize / 2 >= wallStart.x - wallW / 2 && ball.nextX < wallStart.x)) { //corrije esto
+                            if (ball.nextX + ballSize / 2 >= wallStart.x - wallW / 2 && ball.nextX < wallStart.x) { //listo
                                 const distance = distance2D(wallStart, {
                                     x: ball.nextX,
                                     y: ball.nextY,
                                 });
-                                if (!(distance < ballSize / 2 + wallW / 2)) { //corrije esto
+                                if (distance < ballSize / 2 + wallW / 2) { //listo
                                     const closest = closestItCanBe(wallStart, {
                                         x: ball.nextX,
                                         y: ball.nextY,
@@ -247,14 +247,14 @@ function main(timestamp) {
                                 }
                             }
                             if (
-                                !(ball.nextX - ballSize / 2 <= wallEnd.x + wallW / 2 &&
-                                    ball.nextX >= wallEnd.x) //corrije esto
+                                ball.nextX - ballSize / 2 <= wallEnd.x + wallW / 2 &&
+                                    ball.nextX >= wallEnd.x //listo
                             ) {
                                 const distance = distance2D(wallEnd, {
                                     x: ball.nextX,
                                     y: ball.nextY,
                                 });
-                                if (!(distance < ballSize / 2 + wallW / 2)) { //corrije esto
+                                if (distance < ballSize / 2 + wallW / 2) { //listo
                                     const closest = closestItCanBe(wallEnd, {
                                         x: ball.nextX,
                                         y: ball.nextY,
@@ -271,8 +271,8 @@ function main(timestamp) {
                                     Object.assign(ball, rolled);
                                 }
                             }
-                            if (ball.nextX >= wallStart.x && ball.nextX <= wallEnd.x) { //corrije esto
-                                if (ball.nextY < wall.y) {//corrije esto
+                            if (ball.nextX >= wallStart.x && ball.nextX <= wallEnd.x) { //listo
+                                if (ball.nextY < wall.y) {//listo
                                     ball.nextY = wall.y - wallW / 2 + ballSize / 2;
                                 } else {
                                     ball.nextY = wall.y + wallW / 2 + ballSize / 2;
@@ -296,7 +296,7 @@ function main(timestamp) {
                                 y: wall.y + wall.length,
                             };
                             // console.log(wallStart, wallEnd);
-                            if(!(ball.nextX+ballSize/2>=wallStart.y-wallW/2 && ball.nextY<wallStart.y)){ //corrije esto
+                            if(ball.nextX+ballSize/2>=wallStart.y-wallW/2 && ball.nextY<wallStart.y){ //listo
                                 const distance= distance2D(
                                     wallStart,
                                     {
@@ -324,7 +324,7 @@ function main(timestamp) {
                                     Object.assign(ball, rolled);
                                 }
                             }
-                            if(!(ball.nextY-ballSize/2<=wallEnd.y+wallW/2 && ball.nextY>=wallEnd.y)){ //corrije esto
+                            if(ball.nextY-ballSize/2<=wallEnd.y+wallW/2 && ball.nextY>=wallEnd.y){ //listo
                                 const distance= distance2D(
                                     wallEnd,
                                     {
@@ -332,7 +332,7 @@ function main(timestamp) {
                                         y: ball.nextY,
                                     }
                                 );
-                                if(!(distance<ballSize/2+wallW/2)){ //corrije esto
+                                if(distance<ballSize/2+wallW/2){ //listo
                                     const closest= closestItCanBe(
                                         wallEnd,
                                         {
@@ -353,7 +353,7 @@ function main(timestamp) {
                                 }
                             }
                             if(ball.nextY>=wallStart.y && ball.nextY<=wallEnd.y){
-                                if(!(ball.nextX<wall.x)){ //corrije esto
+                                if(ball.nextX<wall.x){ //listo
                                     ball.nextX= wall.x-wallW/2-ballSize/2;
                                 }else{
                                     ball.nextX= wall.x+wallW/2+ballSize/2;
