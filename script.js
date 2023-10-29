@@ -195,28 +195,97 @@ function main(timestamp) {
             const frictionDeltaX = frictionX * timeElapsed;
             const frictionDeltaY = frictionY * timeElapsed;
             balls.forEach((ball, index) => {
-                ball.velocityX =slow(ball.velocityX, frictionDeltaX);
-                ball.velocityY =slow(ball.velocityY, frictionDeltaY);
-                ball.velocityY =.01;
+                if(velocityChangeX ===0){
+                    ball.velocityX = slow(ball.velocityX, frictionDeltaX);
+                }else{
+                    ball.velocityX += velocityChangeX;
+                    ball.velocityX = Math.max(Math.min(ball.velocityX, 1.5), -1.5);
+                    ball.velocityX-=Math.sign(velocityChangeX)*frictionDeltaX;
+                    ball.velocityX = Math.minmax(ball.velocityX, maxVelocity);
+                }
+                if(velocityChangeY ===0){
+                    ball.velocityY = slow(ball.velocityY, frictionDeltaY);
+                }else{
+                    ball.velocityY += velocityChangeY;
+                    ball.velocityY = Math.max(Math.min(ball.velocityY, 1.5), -1.5);
+                    ball.velocityY-=Math.sign(velocityChangeY)*frictionDeltaY;
+                    ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
+                }
                 ball.nextX = ball.x + ball.velocityX;
                 ball.nextY = ball.y + ball.velocityY;
-                walls.forEach((wall, wi) => {
-                    const wallStart = {x: wall.x, y: wall.y};
-                    const wallEnd = {x: wall.x, y: wall.y};
-                    const distance = distance2D(wallEnd,{
-                        x: ball.x,
-                        y: ball.y
-                    });
-                    ball.x += ball.velocityX;
-                    ball.y += ball.velocityY;
-                    console.log(ball.x, ball.y);
-                }); //aca va el choque con las paredes
-                balls.forEach(({x,y},index)=>{
-                    ballElements[index].style.cssText = `
-                        left: ${x}px;
-                        top: ${y}px;
-                    `;
-                })
+                walls.forEach((wall) => {
+                    if(wall.horizontal){
+                        if(!ball.nextY+ballSize/2>=wall.y-wallW/2 && !ball.nextY-ballSize/2<=wall.y+wallW/2){ //corrije esto
+                            const wallStart={
+                                x: wall.x,
+                                y: wall.y,
+                            };
+                            const wallEnd={
+                                x: wall.x+wall.length,
+                                y: wall.y,
+                            };
+                            if(!(ball.nextX+ballSize/2>=wallStart.x-wallW/2 && ball.nextX<wallStart.x)){ //corrije esto
+                                const distance = distance2D(wallStart,{
+                                    x: ball.nextX,
+                                    y: ball.nextY,
+                                });
+                                if(!(distance<ballSize/2+wallW/2)){ //corrije esto
+                                    const closest= closestItCanBe(wallStart, {
+                                        x: ball.nextX,
+                                        y: ball.nextY,
+                                    });
+                                    const rolled= rollAroundCap(
+                                        wallStart,
+                                        {
+                                            x: ball.nextX,
+                                            y: ball.nextY,
+                                            velocityX: ball.velocityX,
+                                            velocityY: ball.velocityY,
+                                        }
+                                    );
+                                    Object.assign(ball, rolled);
+                                }
+                            }
+                            if(
+                                !(ball.nextX-ballSize/2<=wallEnd.x+wallW/2 &&
+                                ball.nextX>=wallEnd.x) //corrije esto
+                            ){
+                                const distance = distance2D(wallEnd,{
+                                    x: ball.nextX,
+                                    y: ball.nextY,
+                                });
+                                if(!(distance<ballSize/2+wallW/2)){ //corrije esto
+                                    const closest= closestItCanBe(wallEnd, {
+                                        x: ball.nextX,
+                                        y: ball.nextY,
+                                    });
+                                    const rolled= rollAroundCap(
+                                        wallEnd,
+                                        {
+                                            x: ball.nextX,
+                                            y: ball.nextY,
+                                            velocityX: ball.velocityX,
+                                            velocityY: ball.velocityY,
+                                        }
+                                    );
+                                    Object.assign(ball, rolled);
+                                }
+                            }
+                            if(ball.nextX>=wallStart.x&&ball.nextX<=wallEnd.x){ //corrije esto
+                                if(ball.nextY<wall.y){//corrije esto
+                                    ball.nextY=wall.y-wallW/2+ballSize/2;
+                                }else{
+                                    ball.nextY=wall.y+wallW/2+ballSize/2;
+                                };
+                                ball.y=ball.nextY;
+                                ball.velocityY*=-1/3;
+                            }
+                        }
+                        // console.log('horizontal');
+                    }else{
+                        // console.log('vertical');
+                    }
+                });
             });
           };
           if(balls.every((ball)=>{

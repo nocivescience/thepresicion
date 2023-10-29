@@ -513,7 +513,7 @@ function main(timestamp) {
                     velocityY: ball.velocityY
                   });
 
-                  Object.assign(ball, rolled);
+                  Object.assign(ball, rolled); 
                 }
               }
 
