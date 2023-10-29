@@ -364,6 +364,25 @@ function main(timestamp) {
                         }
                     }
                 });
+                if(hardMode){
+                    holes.forEach((hole, hi) => {
+                        const distance= distance2D(hole, {
+                            x: ball.nextX,
+                            y: ball.nextY,
+                        });
+                        if(distance<=holeSize/2){
+                            holeElements[hi].style.backgroundColr= 'red';
+                        }
+                    });
+                }
+                ball.x = ball.x + ball.velocityX;
+                ball.y = ball.y + ball.velocityY;
+            });
+            balls.forEach(({ x, y }, index) => {
+                ballElements[index].style.cssText = `
+                    left: ${x}px;
+                    top: ${y}px;
+                `;
             });
         };
         if (balls.every((ball) => {
