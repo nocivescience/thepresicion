@@ -9,8 +9,8 @@ let hardMode = false;
 let ballElements = [];
 let holeElements = [];
 let debugMode = false;
-const pathW= 25;
-const wallW= 10;
+const pathW = 25;
+const wallW = 10;
 const ballSize = 10;
 const holeSize = 18;
 resetGame();
@@ -24,23 +24,23 @@ function getAngle(p1, p2) { //revisa esto
 };
 const closestItCanBe = (cap, ball) => {
     let angle = getAngle(cap, ball);
-    const deltaX= Math.cos(angle) * (wallW+ballSize)/2;
-    const deltaY= Math.sin(angle) * (wallW+ballSize)/2;
-    return {x: cap.x + deltaX, y: cap.y + deltaY};
+    const deltaX = Math.cos(angle) * (wallW + ballSize) / 2;
+    const deltaY = Math.sin(angle) * (wallW + ballSize) / 2;
+    return { x: cap.x + deltaX, y: cap.y + deltaY };
 };
-const rollAroundCap =(cap, ball)=>{
-    const nextX= 1
-    const nextY= 1
-    return {nextX, nextY}
+const rollAroundCap = (cap, ball) => {
+    const nextX = 1
+    const nextY = 1
+    return { nextX, nextY }
 }
-function slow(number, difference){
-    if(Math.abs(number) <= difference){
+function slow(number, difference) {
+    if (Math.abs(number) <= difference) {
         return 0;
     }
-    if(number>difference){
-        return number-difference;
+    if (number > difference) {
+        return number - difference;
     }
-    return number+difference;
+    return number + difference;
 }
 function resetGame() {
     gameInProgress = false;
@@ -58,18 +58,18 @@ function resetGame() {
         cursor: grab;
     `;
     balls = [
-        {column:0, row: 0},
-        {column:9, row: 0},
-        {column:0, row: 8},
-        {column:9, row: 8},
+        { column: 0, row: 0 },
+        { column: 9, row: 0 },
+        { column: 0, row: 8 },
+        { column: 9, row: 8 },
     ].map((ball) => ({
-        x : ball.column * (wallW+pathW) + wallW/2+pathW/2,
-        y : ball.row * (wallW+pathW) + wallW/2+pathW/2,
+        x: ball.column * (wallW + pathW) + wallW / 2 + pathW / 2,
+        y: ball.row * (wallW + pathW) + wallW / 2 + pathW / 2,
         velocityX: 0,
         velocityY: 0,
     }));
-    balls.forEach(({x,y}) => {
-        const ball= document.createElement('div');
+    balls.forEach(({ x, y }) => {
+        const ball = document.createElement('div');
         ball.setAttribute('class', 'ball');
         ball.style.cssText = `
             left: ${ball.x}px;
@@ -78,8 +78,8 @@ function resetGame() {
         mazeEl.appendChild(ball);
         ballElements.push(ball);
     });
-    if(ballElements.length){
-        balls.forEach(({x, y}, index) => {
+    if (ballElements.length) {
+        balls.forEach(({ x, y }, index) => {
             ballElements[index].style.cssText = `
                 left: ${x}px;
                 top: ${y}px;
@@ -87,88 +87,88 @@ function resetGame() {
         })
     }
 }
-walls=[
-    {column:0, row: 0, horizontal: true, length: 10},
-    {column:0, row: 0, horizontal: false, length: 9},
-    {column:0, row: 9, horizontal: true, length: 10},
-    {column:10, row: 0, horizontal: false, length: 9},
-    {column:0, row: 6, horizontal: true, length: 1},
-    {column:0, row: 8, horizontal: true, length: 1},
-    {column:2, row: 2, horizontal: true, length: 2},
-    {column:2, row: 4, horizontal: true, length: 1},
-    {column:2, row: 5, horizontal: true, length: 1},
-    {column:2, row: 6, horizontal: true, length: 1},
+walls = [
+    { column: 0, row: 0, horizontal: true, length: 10 },
+    { column: 0, row: 0, horizontal: false, length: 9 },
+    { column: 0, row: 9, horizontal: true, length: 10 },
+    { column: 10, row: 0, horizontal: false, length: 9 },
+    { column: 0, row: 6, horizontal: true, length: 1 },
+    { column: 0, row: 8, horizontal: true, length: 1 },
+    { column: 2, row: 2, horizontal: true, length: 2 },
+    { column: 2, row: 4, horizontal: true, length: 1 },
+    { column: 2, row: 5, horizontal: true, length: 1 },
+    { column: 2, row: 6, horizontal: true, length: 1 },
     { column: 3, row: 3, horizontal: true, length: 1 },
-  { column: 3, row: 8, horizontal: true, length: 3 },
+    { column: 3, row: 8, horizontal: true, length: 3 },
 
-  // Horizontal lines starting in 5th column
-  { column: 4, row: 6, horizontal: true, length: 1 },
+    // Horizontal lines starting in 5th column
+    { column: 4, row: 6, horizontal: true, length: 1 },
 
-  // Horizontal lines starting in 6th column
-  { column: 5, row: 2, horizontal: true, length: 2 },
-  { column: 5, row: 7, horizontal: true, length: 1 },
+    // Horizontal lines starting in 6th column
+    { column: 5, row: 2, horizontal: true, length: 2 },
+    { column: 5, row: 7, horizontal: true, length: 1 },
 
-  // Horizontal lines starting in 7th column
-  { column: 6, row: 1, horizontal: true, length: 1 },
-  { column: 6, row: 6, horizontal: true, length: 2 },
+    // Horizontal lines starting in 7th column
+    { column: 6, row: 1, horizontal: true, length: 1 },
+    { column: 6, row: 6, horizontal: true, length: 2 },
 
-  // Horizontal lines starting in 8th column
-  { column: 7, row: 3, horizontal: true, length: 2 },
-  { column: 7, row: 7, horizontal: true, length: 2 },
+    // Horizontal lines starting in 8th column
+    { column: 7, row: 3, horizontal: true, length: 2 },
+    { column: 7, row: 7, horizontal: true, length: 2 },
 
-  // Horizontal lines starting in 9th column
-  { column: 8, row: 1, horizontal: true, length: 1 },
-  { column: 8, row: 2, horizontal: true, length: 1 },
-  { column: 8, row: 3, horizontal: true, length: 1 },
-  { column: 8, row: 4, horizontal: true, length: 2 },
-  { column: 8, row: 8, horizontal: true, length: 2 },
+    // Horizontal lines starting in 9th column
+    { column: 8, row: 1, horizontal: true, length: 1 },
+    { column: 8, row: 2, horizontal: true, length: 1 },
+    { column: 8, row: 3, horizontal: true, length: 1 },
+    { column: 8, row: 4, horizontal: true, length: 2 },
+    { column: 8, row: 8, horizontal: true, length: 2 },
 
-  // Vertical lines after the 1st column
-  { column: 1, row: 1, horizontal: false, length: 2 },
-  { column: 1, row: 4, horizontal: false, length: 2 },
+    // Vertical lines after the 1st column
+    { column: 1, row: 1, horizontal: false, length: 2 },
+    { column: 1, row: 4, horizontal: false, length: 2 },
 
-  // Vertical lines after the 2nd column
-  { column: 2, row: 2, horizontal: false, length: 2 },
-  { column: 2, row: 5, horizontal: false, length: 1 },
-  { column: 2, row: 7, horizontal: false, length: 2 },
+    // Vertical lines after the 2nd column
+    { column: 2, row: 2, horizontal: false, length: 2 },
+    { column: 2, row: 5, horizontal: false, length: 1 },
+    { column: 2, row: 7, horizontal: false, length: 2 },
 
-  // Vertical lines after the 3rd column
-  { column: 3, row: 0, horizontal: false, length: 1 },
-  { column: 3, row: 4, horizontal: false, length: 1 },
-  { column: 3, row: 6, horizontal: false, length: 2 },
+    // Vertical lines after the 3rd column
+    { column: 3, row: 0, horizontal: false, length: 1 },
+    { column: 3, row: 4, horizontal: false, length: 1 },
+    { column: 3, row: 6, horizontal: false, length: 2 },
 
-  // Vertical lines after the 4th column
-  { column: 4, row: 1, horizontal: false, length: 2 },
-  { column: 4, row: 6, horizontal: false, length: 1 },
+    // Vertical lines after the 4th column
+    { column: 4, row: 1, horizontal: false, length: 2 },
+    { column: 4, row: 6, horizontal: false, length: 1 },
 
-  // Vertical lines after the 5th column
-  { column: 5, row: 0, horizontal: false, length: 2 },
-  { column: 5, row: 6, horizontal: false, length: 1 },
-  { column: 5, row: 8, horizontal: false, length: 1 },
+    // Vertical lines after the 5th column
+    { column: 5, row: 0, horizontal: false, length: 2 },
+    { column: 5, row: 6, horizontal: false, length: 1 },
+    { column: 5, row: 8, horizontal: false, length: 1 },
 
-  // Vertical lines after the 6th column
-  { column: 6, row: 4, horizontal: false, length: 1 },
-  { column: 6, row: 6, horizontal: false, length: 1 },
+    // Vertical lines after the 6th column
+    { column: 6, row: 4, horizontal: false, length: 1 },
+    { column: 6, row: 6, horizontal: false, length: 1 },
 
-  // Vertical lines after the 7th column
-  { column: 7, row: 1, horizontal: false, length: 4 },
-  { column: 7, row: 7, horizontal: false, length: 2 },
+    // Vertical lines after the 7th column
+    { column: 7, row: 1, horizontal: false, length: 4 },
+    { column: 7, row: 7, horizontal: false, length: 2 },
 
-  // Vertical lines after the 8th column
-  { column: 8, row: 2, horizontal: false, length: 1 },
-  { column: 8, row: 4, horizontal: false, length: 2 },
+    // Vertical lines after the 8th column
+    { column: 8, row: 2, horizontal: false, length: 1 },
+    { column: 8, row: 4, horizontal: false, length: 2 },
 
-  // Vertical lines after the 9th column
-  { column: 9, row: 1, horizontal: false, length: 1 },
-  { column: 9, row: 5, horizontal: false, length: 2 }
+    // Vertical lines after the 9th column
+    { column: 9, row: 1, horizontal: false, length: 1 },
+    { column: 9, row: 5, horizontal: false, length: 2 }
 ].map((wall) => ({
-    x : wall.column * (wallW+pathW),
-    y : wall.row * (wallW+pathW),
+    x: wall.column * (wallW + pathW),
+    y: wall.row * (wallW + pathW),
     horizontal: wall.horizontal,
-    length: wall.length * (wallW+pathW),
+    length: wall.length * (wallW + pathW),
 }))
-walls.forEach(({x,y,horizontal,length}) => {
-    const wall= document.createElement('div');
+walls.forEach(({ x, y, horizontal, length }) => {
+    const wall = document.createElement('div');
     wall.setAttribute('class', 'wall');
     wall.style.cssText = `
         left: ${x}px;
@@ -189,51 +189,129 @@ function main(timestamp) {
     const maxVelocity = 1.5;
     const timeElapsed = (timestamp - previousTimestamp) / 16;
     try {
-          if(accelerationX !== undefined && accelerationY !== undefined){
+        if (accelerationX !== undefined && accelerationY !== undefined) {
             const velocityChangeX = accelerationX * timeElapsed;
             const velocityChangeY = accelerationY * timeElapsed;
             const frictionDeltaX = frictionX * timeElapsed;
             const frictionDeltaY = frictionY * timeElapsed;
             balls.forEach((ball, index) => {
-                if(velocityChangeX ===0){
+                if (velocityChangeX === 0) {
                     ball.velocityX = slow(ball.velocityX, frictionDeltaX);
-                }else{
+                } else {
                     ball.velocityX += velocityChangeX;
                     ball.velocityX = Math.max(Math.min(ball.velocityX, 1.5), -1.5);
-                    ball.velocityX-=Math.sign(velocityChangeX)*frictionDeltaX;
+                    ball.velocityX -= Math.sign(velocityChangeX) * frictionDeltaX;
                     ball.velocityX = Math.minmax(ball.velocityX, maxVelocity);
                 }
-                if(velocityChangeY ===0){
+                if (velocityChangeY === 0) {
                     ball.velocityY = slow(ball.velocityY, frictionDeltaY);
-                }else{
+                } else {
                     ball.velocityY += velocityChangeY;
                     ball.velocityY = Math.max(Math.min(ball.velocityY, 1.5), -1.5);
-                    ball.velocityY-=Math.sign(velocityChangeY)*frictionDeltaY;
+                    ball.velocityY -= Math.sign(velocityChangeY) * frictionDeltaY;
                     ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
                 }
                 ball.nextX = ball.x + ball.velocityX;
                 ball.nextY = ball.y + ball.velocityY;
                 walls.forEach((wall) => {
-                    if(wall.horizontal){
-                        if(!ball.nextY+ballSize/2>=wall.y-wallW/2 && !ball.nextY-ballSize/2<=wall.y+wallW/2){ //corrije esto
+                    if (wall.horizontal) {
+                        if (!ball.nextY + ballSize / 2 >= wall.y - wallW / 2 && !ball.nextY - ballSize / 2 <= wall.y + wallW / 2) { //corrije esto
+                            const wallStart = {
+                                x: wall.x,
+                                y: wall.y,
+                            };
+                            const wallEnd = {
+                                x: wall.x + wall.length,
+                                y: wall.y,
+                            };
+                            if (!(ball.nextX + ballSize / 2 >= wallStart.x - wallW / 2 && ball.nextX < wallStart.x)) { //corrije esto
+                                const distance = distance2D(wallStart, {
+                                    x: ball.nextX,
+                                    y: ball.nextY,
+                                });
+                                if (!(distance < ballSize / 2 + wallW / 2)) { //corrije esto
+                                    const closest = closestItCanBe(wallStart, {
+                                        x: ball.nextX,
+                                        y: ball.nextY,
+                                    });
+                                    const rolled = rollAroundCap(
+                                        wallStart,
+                                        {
+                                            x: ball.nextX,
+                                            y: ball.nextY,
+                                            velocityX: ball.velocityX,
+                                            velocityY: ball.velocityY,
+                                        }
+                                    );
+                                    Object.assign(ball, rolled);
+                                }
+                            }
+                            if (
+                                !(ball.nextX - ballSize / 2 <= wallEnd.x + wallW / 2 &&
+                                    ball.nextX >= wallEnd.x) //corrije esto
+                            ) {
+                                const distance = distance2D(wallEnd, {
+                                    x: ball.nextX,
+                                    y: ball.nextY,
+                                });
+                                if (!(distance < ballSize / 2 + wallW / 2)) { //corrije esto
+                                    const closest = closestItCanBe(wallEnd, {
+                                        x: ball.nextX,
+                                        y: ball.nextY,
+                                    });
+                                    const rolled = rollAroundCap(
+                                        wallEnd,
+                                        {
+                                            x: ball.nextX,
+                                            y: ball.nextY,
+                                            velocityX: ball.velocityX,
+                                            velocityY: ball.velocityY,
+                                        }
+                                    );
+                                    Object.assign(ball, rolled);
+                                }
+                            }
+                            if (ball.nextX >= wallStart.x && ball.nextX <= wallEnd.x) { //corrije esto
+                                if (ball.nextY < wall.y) {//corrije esto
+                                    ball.nextY = wall.y - wallW / 2 + ballSize / 2;
+                                } else {
+                                    ball.nextY = wall.y + wallW / 2 + ballSize / 2;
+                                };
+                                ball.y = ball.nextY;
+                                ball.velocityY *= -1 / 3;
+                            }
+                        }
+                        // console.log('horizontal');
+                    } else {
+                        // console.log('vertical');
+                        if (
+                            ball.nextX + ballSize / 2 >= wall.x - wallW / 2 && ball.nextX - ballSize / 2 <= wall.x + wallW / 2
+                        ) {
                             const wallStart={
                                 x: wall.x,
                                 y: wall.y,
                             };
                             const wallEnd={
-                                x: wall.x+wall.length,
-                                y: wall.y,
+                                x: wall.x,
+                                y: wall.y + wall.length,
                             };
-                            if(!(ball.nextX+ballSize/2>=wallStart.x-wallW/2 && ball.nextX<wallStart.x)){ //corrije esto
-                                const distance = distance2D(wallStart,{
-                                    x: ball.nextX,
-                                    y: ball.nextY,
-                                });
-                                if(!(distance<ballSize/2+wallW/2)){ //corrije esto
-                                    const closest= closestItCanBe(wallStart, {
+                            // console.log(wallStart, wallEnd);
+                            if(!(ball.nextX+ballSize/2>=wallStart.y-wallW/2 && ball.nextY<wallStart.y)){ //corrije esto
+                                const distance= distance2D(
+                                    wallStart,
+                                    {
                                         x: ball.nextX,
                                         y: ball.nextY,
-                                    });
+                                    }
+                                );
+                                if(distance<ballSize/2+wallW/2){
+                                    const closest= closestItCanBe(
+                                        wallStart,
+                                        {
+                                            x: ball.nextX,
+                                            y: ball.nextY,
+                                        }
+                                    );
                                     const rolled= rollAroundCap(
                                         wallStart,
                                         {
@@ -246,19 +324,22 @@ function main(timestamp) {
                                     Object.assign(ball, rolled);
                                 }
                             }
-                            if(
-                                !(ball.nextX-ballSize/2<=wallEnd.x+wallW/2 &&
-                                ball.nextX>=wallEnd.x) //corrije esto
-                            ){
-                                const distance = distance2D(wallEnd,{
-                                    x: ball.nextX,
-                                    y: ball.nextY,
-                                });
-                                if(!(distance<ballSize/2+wallW/2)){ //corrije esto
-                                    const closest= closestItCanBe(wallEnd, {
+                            if(!(ball.nextY-ballSize/2<=wallEnd.y+wallW/2 && ball.nextY>=wallEnd.y)){ //corrije esto
+                                const distance= distance2D(
+                                    wallEnd,
+                                    {
                                         x: ball.nextX,
                                         y: ball.nextY,
-                                    });
+                                    }
+                                );
+                                if(!(distance<ballSize/2+wallW/2)){ //corrije esto
+                                    const closest= closestItCanBe(
+                                        wallEnd,
+                                        {
+                                            x: ball.nextX,
+                                            y: ball.nextY,
+                                        }
+                                    );
                                     const rolled= rollAroundCap(
                                         wallEnd,
                                         {
@@ -271,34 +352,31 @@ function main(timestamp) {
                                     Object.assign(ball, rolled);
                                 }
                             }
-                            if(ball.nextX>=wallStart.x&&ball.nextX<=wallEnd.x){ //corrije esto
-                                if(ball.nextY<wall.y){//corrije esto
-                                    ball.nextY=wall.y-wallW/2+ballSize/2;
+                            if(ball.nextY>=wallStart.y && ball.nextY<=wallEnd.y){
+                                if(!(ball.nextX<wall.x)){ //corrije esto
+                                    ball.nextX= wall.x-wallW/2-ballSize/2;
                                 }else{
-                                    ball.nextY=wall.y+wallW/2+ballSize/2;
-                                };
-                                ball.y=ball.nextY;
-                                ball.velocityY*=-1/3;
+                                    ball.nextX= wall.x+wallW/2+ballSize/2;
+                                }
+                                ball.x= ball.nextX;
+                                ball.velocityX *= -1/3;
                             }
                         }
-                        // console.log('horizontal');
-                    }else{
-                        // console.log('vertical');
                     }
                 });
             });
-          };
-          if(balls.every((ball)=>{
-            distance2D(ball,{x:350/2, y:315/2})<65/2
-          })){
+        };
+        if (balls.every((ball) => {
+            distance2D(ball, { x: 350 / 2, y: 315 / 2 }) < 65 / 2
+        })) {
             resetGame();
             noteElement.innerHTML = `Felicidades, ganaeste en modo ${hardMode ? 'dificil' : 'facil'}`;
-            noteElement.style.opacity=1;
+            noteElement.style.opacity = 1;
             gameInProgress = false;
-          }else{
+        } else {
             previousTimestamp = timestamp;
             window.requestAnimationFrame(main);
-          }
+        }
     } catch (error) {
         console.log(error);
     }
