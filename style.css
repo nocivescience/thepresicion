@@ -10,6 +10,13 @@ body {
   
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--background-color);
+    position: relative;
+    perspective: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1000px;
   }
   
   html,
@@ -160,6 +167,16 @@ body {
     height: 10px;
   }
   
+  #pantalla .ballD{
+    position: absolute;
+    margin-top: -5px;
+    margin-left: -5px;
+    border-radius: 50%;
+    background-color: rgb(0, 116, 169);
+    width: 20px;
+    height: 20px;
+  }
+
   .wall {
     position: absolute;
     background-color: var(--wall-color);
@@ -195,74 +212,23 @@ body {
     width: 18px;
     height: 18px;
   }
-  
-  #youtube,
-  #youtube-card {
-    display: none;
-  }
-  
-  @media (min-height: 425px) {
-    /** Youtube logo by https://codepen.io/alvaromontoro */
-    #youtube {
-      z-index: 2;
-      display: block;
-      width: 100px;
-      height: 70px;
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: red;
-      border-radius: 50% / 11%;
-      transform: scale(0.8);
-      transition: transform 0.5s;
-    }
-  
-    #youtube:hover,
-    #youtube:focus {
-      transform: scale(0.9);
-    }
-  
-    #youtube::before {
-      content: "";
-      display: block;
-      position: absolute;
-      top: 7.5%;
-      left: -6%;
-      width: 112%;
-      height: 85%;
-      background: red;
-      border-radius: 9% / 50%;
-    }
-  
-    #youtube::after {
-      content: "";
-      display: block;
-      position: absolute;
-      top: 20px;
-      left: 40px;
-      width: 45px;
-      height: 30px;
-      border: 15px solid transparent;
-      box-sizing: border-box;
-      border-left: 30px solid white;
-    }
-  
-    #youtube span {
-      font-size: 0;
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-    }
-  
-    #youtube:hover + #youtube-card {
-      display: block;
-      position: absolute;
-      bottom: 12px;
-      right: 10px;
-      padding: 25px 130px 25px 25px;
-      width: 300px;
-      background-color: white;
-    }
-  }
-  
+#pantalla{
+  width: auto;
+  min-width: 700px;
+  height: 100px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 50px;
+  box-shadow: 0 0 17px #00000070;
+  transform-style: preserve-3d;
+  transform-origin: left;
+}
+#pantalla .wall{
+  position: absolute;
+  background-color: #000;
+  transform-origin: top center;
+  margin-left: -5px;
+}

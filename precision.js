@@ -88,6 +88,7 @@ const slow = (number, difference) => {
 const mazeElement = document.getElementById("maze");
 const joystickHeadElement = document.getElementById("joystick-head");
 const noteElement = document.getElementById("note"); // Note element for instructions and game won, game failed texts
+const pantallaElement = document.getElementById("pantalla");
 
 let hardMode = false;
 let previousTimestamp;
