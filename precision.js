@@ -91,6 +91,7 @@ const noteElement = document.getElementById("note"); // Note element for instruc
 const pantallaElement = document.getElementById("pantalla");
 
 let hardMode = false;
+let colorWall=true
 let previousTimestamp;
 let gameInProgress;
 let mouseStartX;
@@ -108,6 +109,7 @@ const holeSize = 18;
 const debugMode = false;
 
 let balls = [];
+let wallElements = [];
 let ballElements = [];
 let holeElements = [];
 
@@ -208,7 +210,12 @@ const walls = [
 
   // Vertical lines after the 9th column
   { column: 9, row: 1, horizontal: false, length: 1 },
-  { column: 9, row: 5, horizontal: false, length: 2 }
+  { column: 9, row: 5, horizontal: false, length: 2 },
+
+  { column: 0, row: 10, horizontal: true, length: 10 },
+  { column: 0, row: 10, horizontal: false, length: 3 },
+  { column: 0, row: 13, horizontal: true, length: 10 },
+  { column: 10, row: 10, horizontal: false, length: 3 }
 ].map((wall) => ({
   x: wall.column * (pathW + wallW),
   y: wall.row * (pathW + wallW),
@@ -225,9 +232,10 @@ walls.forEach(({ x, y, horizontal, length }) => {
       top: ${y}px;
       width: ${wallW}px;
       height: ${length}px;
+      background-color: ${!colorWall ? "black" : "green"};
       transform: rotate(${horizontal ? -90 : 0}deg);
     `;
-
+  wallElements.push(wall);
   mazeElement.appendChild(wall);
 });
 
@@ -350,7 +358,8 @@ function resetGame() {
     { column: 0, row: 0 },
     { column: 9, row: 0 },
     { column: 0, row: 8 },
-    { column: 9, row: 8 }
+    { column: 9, row: 8 },
+    { column: 0, row: 10}
   ].map((ball) => ({
     x: ball.column * (wallW + pathW) + (wallW / 2 + pathW / 2),
     y: ball.row * (wallW + pathW) + (wallW / 2 + pathW / 2),
@@ -604,19 +613,20 @@ function main(timestamp) {
                     velocityX: ball.velocityX,
                     velocityY: ball.velocityY
                   });
-
                   Object.assign(ball, rolled);
                 }
               }
-
+              
               if (ball.nextY >= wallStart.y && ball.nextY <= wallEnd.y) {
                 // The ball got inside the main body of the wall
                 if (ball.nextX < wall.x) {
                   // Hit vertical wall from left
                   ball.nextX = wall.x - wallW / 2 - ballSize / 2;
+                  colorWall=false;
                 } else {
                   // Hit vertical wall from right
                   ball.nextX = wall.x + wallW / 2 + ballSize / 2;
+                  colorWall=true;
                 }
                 ball.x = ball.nextX;
                 ball.velocityX = -ball.velocityX / 3;
@@ -652,6 +662,16 @@ function main(timestamp) {
       // Move balls to their new position on the UI
       balls.forEach(({ x, y }, index) => {
         ballElements[index].style.cssText = `left: ${x}px; top: ${y}px; `;
+      });
+      walls.forEach((wall, index) => {
+        if (index > 4) {
+          wallElements[index].style.cssText = `
+          left: ${wall.x}px; 
+          top: ${wall.y}px; 
+          width: ${wallW}px; 
+          height: ${wall.length}px; 
+          background-color: ${!colorWall ? "black" : "green"}; transform: rotate(${wall.horizontal ? -90 : 0}deg); `;
+        }
       });
     }
 
