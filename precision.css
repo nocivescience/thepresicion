@@ -162,7 +162,6 @@ a:visited {
 
 .wall {
   position: absolute;
-  background-color: var(--wall-color);
   transform-origin: top center;
   margin-left: -5px;
 }
@@ -230,7 +229,7 @@ a:visited {
     left: -6%;
     width: 112%;
     height: 85%;
-    background: red;
+    background: rgb(171, 0, 0);
     border-radius: 9% / 50%;
   }
 
